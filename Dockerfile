@@ -1,14 +1,20 @@
-# Use uma imagem do OpenJDK como base
-FROM openjdk:17-jdk-alpine
 
-# Define o diretório de trabalho dentro do container
+FROM maven:3.9.8-eclipse-temurin-21 AS build
+
+COPY C:/Users/BRibeirodefreitas/agenda-coleta-lixo /app
+
 WORKDIR /app
 
-# Copia o arquivo JAR gerado para dentro do container
-COPY target/agenda-coleta-lixo-0.0.1-SNAPSHOT.jar app.jar
+RUN mvn clean package
 
-# Comando para rodar a aplicação
-ENTRYPOINT ["java", "-jar", "app.jar"]
+FROM eclipse-temurin:21-jre-alpine
 
-# Expõe a porta 8080
+COPY . /opt/app
+
+WORKDIR /app
+
+ENV PROFILE=prd
+
 EXPOSE 8080
+
+ENTRYPOINT ["java", "-Dspring.profiles.active=${PROFILE}", "-jar", "app.jar"]
