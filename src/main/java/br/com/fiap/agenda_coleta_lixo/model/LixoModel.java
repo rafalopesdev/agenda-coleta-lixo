@@ -53,4 +53,5 @@ public class LixoModel {
     public void setEndereco(String endereco) {
         this.endereco = endereco;
     }
+//    teste
 }
